@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { IProduct } from 'src/interfaces/product.interface';
+import { ProductsRespository } from './products.repository';
 
 @Injectable()
 export class ProductsService {
-  private readonly products: IProduct[] = [];
+  constructor(private productsRepository: ProductsRespository) {}
 
-  create(product: IProduct) {
-    this.products.push(product);
-  }
-
-  findAll(): IProduct[] {
-    return this.products;
+  getUsers() {
+    return this.productsRepository.getProducts();
   }
 }
