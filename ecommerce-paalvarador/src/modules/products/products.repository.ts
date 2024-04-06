@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { IProduct } from 'src/interfaces/product.interface';
 
 @Injectable()
 export class ProductsRespository {
@@ -51,6 +52,56 @@ export class ProductsRespository {
   ];
 
   async getProducts() {
-    return this.mock_products;
+    return await this.mock_products;
+  }
+
+  async getProductById(id: number) {
+    return await this.mock_products.find((product) => product.id === id);
+  }
+
+  async createProduct(product: IProduct) {
+    const nextId = this.mock_products.length + 1;
+    const newProduct = {
+      id: nextId,
+      ...product,
+    };
+    this.mock_products.push(newProduct);
+
+    return nextId;
+  }
+
+  async updateProductById(id: number, product: IProduct) {
+    // Primero obtener el objeto del producto que vamos a editar
+    const editProduct = this.mock_products.find((product) => product.id === id);
+
+    // Cambiar cada una de sus propiedades con las propiedades del objeto product
+    editProduct.name = product.name;
+    editProduct.description = product.description;
+    editProduct.price = product.price;
+    editProduct.stock = product.stock;
+    editProduct.imgUrl = product.imgUrl;
+
+    // Devolver el id del objeto editado
+    return editProduct.id;
+  }
+
+  async deleteProductById(id: number) {
+    // Primero obtener la posicion del elemento
+    const indexProduct = this.mock_products.forEach((product, index) => {
+      if (product.id === id) return index;
+      else return -1;
+    });
+
+    // Si el indexUser es -1 se retorna 0 significa que ningun producto fue borrado
+    if (Number(indexProduct) === -1) {
+      return 0;
+    } else {
+      // Caso contrario se devuelve el id del producto eliminado
+      const [productRemoved] = this.mock_products.splice(
+        Number(indexProduct),
+        1,
+      );
+      return productRemoved.id;
+    }
   }
 }

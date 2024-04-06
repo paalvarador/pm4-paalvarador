@@ -1,19 +1,55 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from 'src/dto/create-product.dto';
+import { IProduct } from 'src/interfaces/product.interface';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll() {
-    return this.productsService.getUsers();
+  async getProducts(@Query('page') page?: 1, @Query('limit') limit?: 5) {
+    console.log(`page: ${page}`);
+    console.log(`limit: ${limit}`);
+    return await this.productsService.getProducts();
+  }
+
+  @Get(':id')
+  async getProductById(@Param('id') id: string) {
+    return await this.productsService.getProductById(Number(id));
   }
 
   @Post()
-  async create(@Body() createProductDto: CreateProductDto) {
-    console.log(createProductDto);
-    return 'Esta accion debe agregar un nuevo producto';
+  @UseGuards(AuthGuard)
+  async createProduct(@Body() createProduct: IProduct) {
+    return await this.productsService.createProduct(createProduct);
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard)
+  async updateProduct(
+    @Param('id') id: string,
+    @Body() updateProduct: IProduct,
+  ) {
+    return await this.productsService.updateProductById(
+      Number(id),
+      updateProduct,
+    );
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  async deleteProduct(@Param('id') id: string) {
+    return await this.productsService.deleteProductById(Number(id));
   }
 }
