@@ -1,28 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { IUser } from 'src/interfaces/user.interface';
+import { User } from 'src/entities/users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   getUsers() {
     return this.usersRepository.getUsers();
   }
 
-  getUserById(id: number) {
+  getUserById(id: string) {
     return this.usersRepository.getUserById(id);
   }
 
-  createUser(user: IUser) {
+  getUserByEmail(email: string) {
+    return this.usersRepository.getUserByEmail(email);
+  }
+
+  createUser(user: User) {
     return this.usersRepository.createUser(user);
   }
 
-  updateUserById(id: number, user: IUser) {
+  updateUserById(id: string, user: User) {
     return this.usersRepository.updateUserById(id, user);
   }
 
-  deleteUserById(id: number) {
+  deleteUserById(id: string) {
     return this.usersRepository.deleteUserById(id);
+  }
+
+  async loginUser(email: string, password: string) {
+    return `Función aún no implementada para email: ${email} y password: ${password}`;
   }
 }

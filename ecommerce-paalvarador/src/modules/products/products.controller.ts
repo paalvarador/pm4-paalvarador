@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { IProduct } from 'src/interfaces/product.interface';
 import { AuthGuard } from '../auth/auth.guard';
+import { Product } from 'src/entities/products.entity';
 
 @Controller('products')
 export class ProductsController {
@@ -26,30 +26,32 @@ export class ProductsController {
 
   @Get(':id')
   async getProductById(@Param('id') id: string) {
-    return await this.productsService.getProductById(Number(id));
+    return await this.productsService.getProductById(id);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  async createProduct(@Body() createProduct: IProduct) {
+  async createProduct(@Body() createProduct: Product) {
     return await this.productsService.createProduct(createProduct);
+  }
+
+  @Post('seeder')
+  async createProductsBySeeder(data: any) {
+    return await this.productsService.createProductBySeeder(data);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard)
   async updateProduct(
     @Param('id') id: string,
-    @Body() updateProduct: IProduct,
+    @Body() updateProdcut: Partial<Product>,
   ) {
-    return await this.productsService.updateProductById(
-      Number(id),
-      updateProduct,
-    );
+    return await this.productsService.updateProduct(id, updateProdcut);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   async deleteProduct(@Param('id') id: string) {
-    return await this.productsService.deleteProductById(Number(id));
+    return await this.productsService.deleteProductById(id);
   }
 }

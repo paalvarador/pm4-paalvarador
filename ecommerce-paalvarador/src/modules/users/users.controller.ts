@@ -10,8 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { IUser } from 'src/interfaces/user.interface';
 import { AuthGuard } from '../auth/auth.guard';
+import { User } from 'src/entities/users.entity';
 
 @Controller('users')
 export class UsersController {
@@ -28,23 +28,23 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AuthGuard)
   async getUserById(@Param('id') id: string) {
-    return await this.usersService.getUserById(Number(id));
+    return await this.usersService.getUserById(id);
   }
 
   @Post()
-  async createUser(@Body() createUser: IUser) {
+  async createUser(@Body() createUser: User) {
     return await this.usersService.createUser(createUser);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard)
-  async updateUser(@Param('id') id: string, @Body() updateUserDto: IUser) {
-    return await this.usersService.updateUserById(Number(id), updateUserDto);
+  async updateUser(@Param('id') id: string, @Body() updateUserDto: User) {
+    return await this.usersService.updateUserById(id, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   async deleteUser(@Param('id') id: string) {
-    return await this.usersService.deleteUserById(Number(id));
+    return await this.usersService.deleteUserById(id);
   }
 }

@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '../users/users.repository';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async login(email: string, password: string) {
     // Lógica para verificar si la contraseña es correcta
-    const user = await this.usersRepository.getUserByEmail(email);
+    const user = await this.usersService.getUserByEmail(email);
+    console.log(`authService user: ${user}`);
 
-    if (Object.keys(user).length === 0) {
+    if (!user) {
       return -1;
     }
 
-    const result = this.usersRepository.loginUser(email, password);
+    const result = this.usersService.loginUser(email, password);
 
     if (!result) {
       return -1;

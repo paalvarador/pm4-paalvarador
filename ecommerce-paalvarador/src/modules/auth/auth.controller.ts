@@ -12,15 +12,21 @@ export class AuthController {
     const { email, password } = credentials;
 
     if (!email || !password) {
-      res.status(400).json({ message: 'Email o password incorrectos' });
+      res
+        .status(400)
+        .json({ message: 'Email o password incorrectos linea 15' });
     }
 
     const response = await this.authService.login(email, password);
 
-    if (response === -1) {
-      res.status(400).json({ message: 'Email o password incorrectos' });
-    }
+    console.log(`response: ${response}`);
 
-    res.status(200).json({ response: 'Login correcto' });
+    if (response === -1) {
+      res
+        .status(400)
+        .json({ message: 'Email o password incorrectos linea 21' });
+    } else {
+      res.status(200).json({ response: 'Login correcto' });
+    }
   }
 }

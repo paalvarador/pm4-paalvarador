@@ -1,107 +1,93 @@
 import { Injectable } from '@nestjs/common';
-import { IProduct } from 'src/interfaces/product.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from 'src/entities/products.entity';
+import { Repository } from 'typeorm';
+import { CategoriesService } from '../categories/categories.service';
 
 @Injectable()
 export class ProductsRespository {
-  private mock_products = [
-    {
-      id: 1,
-      name: 'Cafetera Eléctrica',
-      description:
-        'Disfruta de un delicioso café cada mañana con nuestra cafetera eléctrica de última generación.',
-      price: 99.99,
-      stock: true,
-      imgUrl: 'https://example.com/img/cafetera.jpg',
-    },
-    {
-      id: 2,
-      name: 'Smartphone 5G',
-      description:
-        'Conectividad ultrarrápida y la mejor tecnología en la palma de tu mano.',
-      price: 799.99,
-      stock: true,
-      imgUrl: 'https://example.com/img/smartphone.jpg',
-    },
-    {
-      id: 3,
-      name: 'Teclado Mecánico RGB',
-      description:
-        'Mejora tu experiencia de escritura y gaming con nuestro teclado mecánico de alta respuesta.',
-      price: 129.99,
-      stock: false,
-      imgUrl: 'https://example.com/img/teclado.jpg',
-    },
-    {
-      id: 4,
-      name: 'Libro de Cocina',
-      description:
-        'Explora nuevas recetas y mejora tus habilidades culinarias con nuestro libro de cocina best-seller.',
-      price: 29.99,
-      stock: true,
-      imgUrl: 'https://example.com/img/libroCocina.jpg',
-    },
-    {
-      id: 5,
-      name: 'Zapatillas Deportivas',
-      description:
-        'Corre con comodidad y estilo con nuestras zapatillas deportivas diseñadas para todo tipo de atletas.',
-      price: 59.99,
-      stock: true,
-      imgUrl: 'https://example.com/img/zapatillas.jpg',
-    },
-  ];
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    @InjectRepository(Product) private productsRepository: Repository<Product>,
+  ) {}
 
   async getProducts() {
-    return await this.mock_products;
+    return await this.productsRepository.find();
   }
 
-  async getProductById(id: number) {
-    return await this.mock_products.find((product) => product.id === id);
+  async getProductById(id: string) {
+    return await this.productsRepository
+      .createQueryBuilder('products')
+      .where('products.id = :id', { id })
+      .andWhere('products.stock > :stock', { stock: 0 })
+      .getOne();
   }
 
-  async createProduct(product: IProduct) {
-    const nextId = this.mock_products.length + 1;
-    const newProduct = {
-      id: nextId,
-      ...product,
-    };
-    this.mock_products.push(newProduct);
-
-    return nextId;
+  async createProduct(product: Product) {
+    return await this.productsRepository.save(product);
   }
 
-  async updateProductById(id: number, product: IProduct) {
-    // Primero obtener el objeto del producto que vamos a editar
-    const editProduct = this.mock_products.find((product) => product.id === id);
+  async crateProductsBySeeder(data: any) {
+    for (const item of data) {
+      try {
+        // Consultar si la categoria existe en la base de datos
+        const category = await this.categoriesService.getCategoriesByName(
+          item.category,
+        );
 
-    // Cambiar cada una de sus propiedades con las propiedades del objeto product
-    editProduct.name = product.name;
-    editProduct.description = product.description;
-    editProduct.price = product.price;
-    editProduct.stock = product.stock;
-    editProduct.imgUrl = product.imgUrl;
+        // Si existe la categoria, se debe crear una
+        // instancia de producto y establcer sus propiedades
+        // con la info del objeto data
+        if (category) {
+          const product = new Product();
+          product.name = item.name;
+          product.description = item.description;
+          product.price = item.price;
+          product.stock = item.stock;
+          product.imgUrl = item.imgUrl;
+          product.category = category;
 
-    // Devolver el id del objeto editado
-    return editProduct.id;
+          // Guardar el producto en la base de datos
+          await this.productsRepository.save(product);
+        }
+      } catch (error) {
+        if (error.code === '23505') {
+          console.error(`El producto ${item.name} ya existe`);
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    // Devolver el listado de productos almacenados
+    return this.productsRepository.find();
   }
 
-  async deleteProductById(id: number) {
-    // Primero obtener la posicion del elemento
-    const indexProduct = this.mock_products.forEach((product, index) => {
-      if (product.id === id) return index;
-      else return -1;
+  async updateProductByStock(product: Product, valueStock: number) {
+    console.log(`Estoy en updateProductByStock`);
+    console.log(`me llega lo siguiente en valueStock: ${valueStock} `);
+    return this.productsRepository.update(product, { stock: valueStock });
+  }
+
+  async updateProduct(
+    id: string,
+    updates: Partial<Product>,
+  ): Promise<Product | null> {
+    const product = await this.productsRepository.findOne({
+      where: { id },
     });
 
-    // Si el indexUser es -1 se retorna 0 significa que ningun producto fue borrado
-    if (Number(indexProduct) === -1) {
-      return 0;
-    } else {
-      // Caso contrario se devuelve el id del producto eliminado
-      const [productRemoved] = this.mock_products.splice(
-        Number(indexProduct),
-        1,
-      );
-      return productRemoved.id;
+    if (!product) {
+      return null;
     }
+
+    Object.assign(product, updates);
+
+    const updateProduct = await this.productsRepository.save(product);
+    return updateProduct;
+  }
+
+  async deleteProductById(id: string) {
+    return await this.productsRepository.delete(id);
   }
 }

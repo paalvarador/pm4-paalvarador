@@ -1,28 +1,36 @@
 import { Injectable } from '@nestjs/common';
+import { Product } from 'src/entities/products.entity';
 import { ProductsRespository } from './products.repository';
-import { IProduct } from 'src/interfaces/product.interface';
 
 @Injectable()
 export class ProductsService {
-  constructor(private productsRepository: ProductsRespository) {}
+  constructor(private readonly productsRepository: ProductsRespository) {}
 
-  getProducts() {
-    return this.productsRepository.getProducts();
+  async getProducts() {
+    return await this.productsRepository.getProducts();
   }
 
-  getProductById(id: number) {
-    return this.productsRepository.getProductById(id);
+  async getProductById(id: string) {
+    return await this.productsRepository.getProductById(id);
   }
 
-  createProduct(product: IProduct) {
-    return this.productsRepository.createProduct(product);
+  async createProduct(product: Product) {
+    return await this.productsRepository.createProduct(product);
   }
 
-  updateProductById(id: number, product: IProduct) {
-    return this.productsRepository.updateProductById(id, product);
+  async createProductBySeeder(data: any) {
+    return await this.productsRepository.crateProductsBySeeder(data);
   }
 
-  deleteProductById(id: number) {
+  async updateProductByStock(product: Product, valueStock: number) {
+    return this.productsRepository.updateProductByStock(product, valueStock);
+  }
+
+  async updateProduct(id: string, updates: Partial<Product>) {
+    return this.productsRepository.updateProduct(id, updates);
+  }
+
+  async deleteProductById(id: string) {
     return this.productsRepository.deleteProductById(id);
   }
 }
