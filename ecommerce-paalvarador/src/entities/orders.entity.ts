@@ -7,7 +7,7 @@ import { User } from './users.entity';
 })
 export class Order {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: uuid = uuid();
 
   @Column()
   date: Date;

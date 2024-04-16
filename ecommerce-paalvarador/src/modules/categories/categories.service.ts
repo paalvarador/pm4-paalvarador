@@ -6,19 +6,23 @@ import { CategoriesRepository } from './categories.repository';
 export class CategoriesService {
   constructor(private readonly categoriesRepository: CategoriesRepository) {}
 
-  getCategories() {
-    return this.categoriesRepository.getCategories();
+  async getCategories() {
+    return await this.categoriesRepository.getCategories();
   }
 
-  getCategoriesByName(name: string) {
-    return this.categoriesRepository.getCategoriesByName(name);
+  async getCategoriesByName(name: string) {
+    return await this.categoriesRepository.getCategoriesByName(name);
   }
 
-  createCategory(category: Category) {
-    return this.categoriesRepository.addCategory(category);
+  async createCategory(category: Category) {
+    return await this.categoriesRepository.addCategory(category);
   }
 
-  createCategoryBySeeder(data: any) {
-    return this.categoriesRepository.addCategoryBySeeder(data);
+  async updateCategory(category: Category) {
+    return await this.categoriesRepository.updateCategory(category);
+  }
+
+  async createCategoryBySeeder(data: any) {
+    return await this.categoriesRepository.addCategoryBySeeder(data);
   }
 }

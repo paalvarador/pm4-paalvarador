@@ -16,7 +16,7 @@ import { Order } from './orders.entity';
 })
 export class OrderDetail {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: uuid = uuid();
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })
   price: number;

@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { CreateOrderDto } from 'src/dto/create-order.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -13,12 +22,12 @@ export class OrdersController {
   }
 
   @Get('id')
-  async getOrderById(@Param('id') id: string) {
+  async getOrderById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.ordersService.getOrderById(id);
   }
 
   @Post()
-  async addOrder(@Body() createOrder: any) {
+  async addOrder(@Body() createOrder: CreateOrderDto) {
     return await this.ordersService.addOrder(createOrder);
   }
 }

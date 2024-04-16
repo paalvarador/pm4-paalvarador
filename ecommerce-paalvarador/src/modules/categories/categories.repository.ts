@@ -11,15 +11,26 @@ export class CategoriesRepository {
   ) {}
 
   async getCategories() {
-    return this.categoriesRepository.find();
+    return await this.categoriesRepository.find();
   }
 
   async getCategoriesByName(name: string) {
-    return this.categoriesRepository.findOne({ where: { name } });
+    return await this.categoriesRepository.findOne({ where: { name } });
   }
 
   async addCategory(category: Category) {
-    console.log(`categories.addCategory(${category})`);
+    return await this.categoriesRepository.save(category);
+  }
+
+  async updateCategory(category: Category) {
+    const existingCategory = await this.categoriesRepository.findOne(
+      category.id,
+    );
+    if (!existingCategory) {
+      throw new Error(`No se encontró la categoria con ID: ${category.id}`);
+    }
+    existingCategory.name = category.name;
+    return await this.categoriesRepository.save(existingCategory);
   }
 
   async addCategoryBySeeder(data: any) {
@@ -41,6 +52,6 @@ export class CategoriesRepository {
     }
 
     // Obtener todas las categorias de la base y devolverlas como respuesta
-    return this.categoriesRepository.find();
+    return await this.categoriesRepository.find();
   }
 }

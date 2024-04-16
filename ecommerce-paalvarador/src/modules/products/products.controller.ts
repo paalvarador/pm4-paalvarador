@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -11,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { CreateProductDto } from 'src/dto/create-product.dto';
 import { Product } from 'src/entities/products.entity';
 
 @Controller('products')
@@ -25,14 +27,21 @@ export class ProductsController {
   }
 
   @Get(':id')
-  async getProductById(@Param('id') id: string) {
+  async getProductById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.productsService.getProductById(id);
   }
 
   @Post()
   @UseGuards(AuthGuard)
-  async createProduct(@Body() createProduct: Product) {
-    return await this.productsService.createProduct(createProduct);
+  async createProduct(@Body() createProduct: CreateProductDto) {
+    const product = new Product();
+    product.name = createProduct.name;
+    product.description = createProduct.description;
+    product.price = createProduct.price;
+    product.stock = createProduct.stock;
+    product.imgUrl = createProduct.imgUrl;
+
+    return await this.productsService.createProduct(product);
   }
 
   @Post('seeder')
@@ -43,7 +52,7 @@ export class ProductsController {
   @Put(':id')
   @UseGuards(AuthGuard)
   async updateProduct(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProdcut: Partial<Product>,
   ) {
     return await this.productsService.updateProduct(id, updateProdcut);
@@ -51,7 +60,7 @@ export class ProductsController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async deleteProduct(@Param('id') id: string) {
+  async deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     return await this.productsService.deleteProductById(id);
   }
 }

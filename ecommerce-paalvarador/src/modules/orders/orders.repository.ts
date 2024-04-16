@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { ProductsService } from '../products/products.service';
 import { Repository } from 'typeorm';
 import { OrderDetail } from 'src/entities/order-details.entity';
+import { CreateOrderDto } from 'src/dto/create-order.dto';
 
 @Injectable()
 export class OrdersRepository {
@@ -31,7 +32,7 @@ export class OrdersRepository {
     return { order, orderDetails };
   }
 
-  async addOrder(order: any) {
+  async addOrder(order: CreateOrderDto) {
     const { userId, products } = order;
 
     // 1. Busca un usuario por id
@@ -54,32 +55,25 @@ export class OrdersRepository {
       const { id } = product;
       const productObj = await this.productsService.getProductById(id);
 
-      console.log(
-        `objeto traido de la base de datos: ${JSON.stringify(productObj)}`,
-      );
+      if (!productObj) {
+        return 'Product not found';
+      }
 
       let stock: number = Number(productObj.stock);
       stock -= 1;
 
       // Actualizo este producto
-      console.log(
-        `Voy a actualizar el stock del producto ${productObj.id} a un valor de ${stock}`,
-      );
       await this.productsService.updateProduct(productObj.id, { stock: stock });
 
       productsArray.push(productObj);
-      console.log(`productObj.price: ${productObj.price}`);
       sumTotal += Number(productObj.price);
     }
 
     // Una vez procesada esta compra, se crear una instancia de OrderDetails y se almacena el total de la compra
     const orderDetail = new OrderDetail();
     orderDetail.order = orderObj;
-    orderDetail.price = sumTotal;
+    orderDetail.price = Number(sumTotal.toFixed(2));
     orderDetail.products = productsArray;
-
-    console.log(`objeto que se va a guardar en OrderDetail`);
-    console.log(`orderDetail: ${JSON.stringify(orderDetail)}`);
 
     this.orderDetailsService.addOrderDetail(orderDetail);
 

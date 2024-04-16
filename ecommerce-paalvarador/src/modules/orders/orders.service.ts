@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OrdersRepository } from './orders.repository';
-import { Order } from 'src/entities/orders.entity';
+import { CreateOrderDto } from 'src/dto/create-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -14,7 +14,7 @@ export class OrdersService {
     return await this.ordersRepository.getOrderById(id);
   }
 
-  async addOrder(order: Order) {
+  async addOrder(order: CreateOrderDto) {
     return await this.ordersRepository.addOrder(order);
   }
 }

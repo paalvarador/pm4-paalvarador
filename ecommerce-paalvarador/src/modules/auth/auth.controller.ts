@@ -1,32 +1,30 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ICredential } from 'src/interfaces/credential.interface';
 import { Response } from 'express';
+import { LoginUserDto } from 'src/dto/login-user.dto';
+import { validate } from 'class-validator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
-  async login(@Body() credentials: ICredential, @Res() res: Response) {
-    const { email, password } = credentials;
+  async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
+    const { email, password } = loginUserDto;
 
-    if (!email || !password) {
-      res
-        .status(400)
-        .json({ message: 'Email o password incorrectos linea 15' });
+    const errors = await validate(loginUserDto);
+    if (errors.length > 0) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: errors });
     }
 
     const response = await this.authService.login(email, password);
 
-    console.log(`response: ${response}`);
-
     if (response === -1) {
       res
-        .status(400)
-        .json({ message: 'Email o password incorrectos linea 21' });
+        .status(HttpStatus.BAD_REQUEST)
+        .json({ message: 'Email o password incorrectos' });
     } else {
-      res.status(200).json({ response: 'Login correcto' });
+      res.status(HttpStatus.OK).json({ response: 'Login correcto' });
     }
   }
 }

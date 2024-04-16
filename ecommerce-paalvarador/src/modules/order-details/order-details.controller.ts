@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
 import { OrderDetail } from 'src/entities/order-details.entity';
 
@@ -14,7 +22,7 @@ export class OrderDetailsController {
   }
 
   @Get('id')
-  async getOrderDetailById(@Param('id') id: string) {
+  async getOrderDetailById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.orderDetailsService.getOrderDetailById(id);
   }
 

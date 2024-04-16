@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { Category } from 'src/entities/catgories.entity';
+import { CreateCategoryDto } from 'src/dto/create-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -12,8 +21,20 @@ export class CategoriesController {
   }
 
   @Post()
-  async createCategories(@Body() createCategory: Category) {
-    return await this.categoriesService.createCategory(createCategory);
+  async createCategories(@Body() createCategory: CreateCategoryDto) {
+    const category = new Category();
+    category.name = createCategory.name;
+
+    return await this.categoriesService.createCategory(category);
+  }
+
+  @Put(':id')
+  async updateCategory(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() category: Category,
+  ) {
+    category.id = id;
+    return await this.categoriesService.updateCategory(category);
   }
 
   @Post('seeder')

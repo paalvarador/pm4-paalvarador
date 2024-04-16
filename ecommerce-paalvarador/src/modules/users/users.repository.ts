@@ -21,7 +21,7 @@ export class UsersRepository {
     return this.usersRepository.findOne({ where: { email: email } });
   }
 
-  async createUser(user: User) {
+  async createUser(user: any) {
     try {
       const newUser = await this.usersRepository.save(user);
       delete newUser.password;
