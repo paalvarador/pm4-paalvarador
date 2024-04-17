@@ -14,6 +14,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { DataLoadService } from './modules/data/data.service';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { DataLoadService } from './modules/data/data.service';
     UsersModule,
     AuthModule,
     OrdersModule,
+    FilesModule,
   ],
   providers: [DataLoadService],
 })
