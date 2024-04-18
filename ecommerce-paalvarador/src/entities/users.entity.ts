@@ -7,7 +7,7 @@ import { Order } from './orders.entity';
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string = uuid();
+  id: uuid = uuid();
 
   @Column({ type: 'varchar', length: 50, nullable: false })
   name: string;
@@ -15,11 +15,11 @@ export class User {
   @Column({ type: 'varchar', length: 50, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 70, nullable: false })
   password: string;
 
-  @Column({ type: 'int' })
-  phone: number;
+  @Column({ type: 'varchar', length: 60 })
+  phone: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   country: string;

@@ -5,7 +5,6 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  Post,
   Put,
   Query,
   UseGuards,
@@ -13,7 +12,6 @@ import {
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { User } from 'src/entities/users.entity';
-import { CreateUserDto } from 'src/dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -33,20 +31,18 @@ export class UsersController {
     return await this.usersService.getUserById(id);
   }
 
-  @Post()
-  async createUser(@Body() createUser: CreateUserDto) {
-    return await this.usersService.createUser(createUser);
-  }
-
   @Put(':id')
   @UseGuards(AuthGuard)
-  async updateUser(@Param('id') id: string, @Body() updateUserDto: User) {
+  async updateUser(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: User,
+  ) {
     return await this.usersService.updateUserById(id, updateUserDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async deleteUser(@Param('id') id: string) {
+  async deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return await this.usersService.deleteUserById(id);
   }
 }

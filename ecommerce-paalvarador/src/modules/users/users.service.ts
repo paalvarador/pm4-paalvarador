@@ -28,8 +28,4 @@ export class UsersService {
   deleteUserById(id: string) {
     return this.usersRepository.deleteUserById(id);
   }
-
-  async loginUser(email: string, password: string) {
-    return `Función aún no implementada para email: ${email} y password: ${password}`;
-  }
 }

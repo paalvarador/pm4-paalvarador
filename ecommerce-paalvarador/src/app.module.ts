@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { DataLoadService } from './modules/data/data.service';
 import { FilesModule } from './modules/files/files.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -33,6 +34,11 @@ import { FilesModule } from './modules/files/files.module';
     AuthModule,
     OrdersModule,
     FilesModule,
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: '1h' },
+      secret: process.env.JWT_SECRET,
+    }),
   ],
   providers: [DataLoadService],
 })
