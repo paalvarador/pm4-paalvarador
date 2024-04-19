@@ -38,6 +38,9 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: true })
   city: string;
 
+  @Column({ type: 'varchar', length: 10, default: 'User' })
+  role: string;
+
   // Relation 1:N with table orders
   @OneToMany(() => Order, (order) => order.id)
   orders: Order[];

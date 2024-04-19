@@ -28,6 +28,7 @@ export class AuthService {
       sub: user.id,
       id: user.id,
       email: user.email,
+      role: user.role,
     };
 
     // Crear un token de acceso que dure una hora y devolver dicho token

@@ -10,11 +10,20 @@ export class UsersRepository {
   ) {}
 
   async getUsers() {
-    return this.usersRepository.find();
+    const users = await this.usersRepository.find();
+
+    for (const user of users) {
+      delete user.role;
+    }
+
+    return users;
   }
 
   async getUserById(id: string) {
-    return this.usersRepository.findOne({ where: { id } });
+    const user = await this.usersRepository.findOne({ where: { id } });
+    delete user.role;
+
+    return user;
   }
 
   async getUserByEmail(email: string) {

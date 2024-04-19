@@ -14,6 +14,7 @@ import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateProductDto } from 'src/dto/create-product.dto';
 import { Product } from 'src/entities/products.entity';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -50,7 +51,7 @@ export class ProductsController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   async updateProduct(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProdcut: Partial<Product>,

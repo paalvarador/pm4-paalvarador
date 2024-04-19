@@ -5,7 +5,9 @@ import {
   Length,
   Matches,
   IsNumberString,
+  IsEnum,
 } from 'class-validator';
+import { Role } from 'src/modules/auth/roles.enum';
 
 export class CreateUserDto {
   @IsEmail()
@@ -45,4 +47,7 @@ export class CreateUserDto {
   @IsString()
   @Length(1, 20)
   city: string;
+
+  @IsEnum(Role)
+  role: Role;
 }

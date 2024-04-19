@@ -16,20 +16,19 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.headers['authorization']?.split(' ')[1] ?? '';
-    console.log({ token });
 
     if (!token) {
       throw new UnauthorizedException('Se requerie el Bearer token');
     }
 
     try {
-      console.log('Entro en la linea 25 del guardian');
       const secret = process.env.JWT_SECRET;
       const payload = this.jwtService.verify(token, { secret });
-      payload.roles = ['admin'];
+      payload.iat = new Date(payload.iat * 1000);
+      payload.exp = new Date(payload.exp * 1000);
       request.user = payload;
-      console.log(`request.user: ${JSON.stringify(request.user)}`);
-      console.log(`llego a la linea 31 del guardian y devuelvo true`);
+
+      console.log(payload);
       return true;
     } catch (error) {
       throw new UnauthorizedException('Token invalido');
