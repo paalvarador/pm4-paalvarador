@@ -7,7 +7,7 @@ import {
   IsNumberString,
   IsEnum,
 } from 'class-validator';
-import { Role } from 'src/modules/auth/roles.enum';
+import { Role } from '../modules/auth/roles.enum';
 
 export class CreateUserDto {
   @IsEmail()

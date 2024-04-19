@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { CreateProductDto } from 'src/dto/create-product.dto';
-import { Product } from 'src/entities/products.entity';
+import { CreateProductDto } from '../../dto/create-product.dto';
+import { Product } from '../../entities/products.entity';
 import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from 'src/decorators/roles.decorator';
+import { Roles } from '../../decorators/roles.decorator';
 import { Role } from '../auth/roles.enum';
 
 @Controller('products')

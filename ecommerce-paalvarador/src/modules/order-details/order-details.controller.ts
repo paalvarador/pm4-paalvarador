@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { OrderDetailsService } from './order-details.service';
-import { OrderDetail } from 'src/entities/order-details.entity';
+import { OrderDetail } from '../../entities/order-details.entity';
 
 @Controller()
 export class OrderDetailsController {

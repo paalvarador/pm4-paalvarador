@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { User } from 'src/entities/users.entity';
-import { Roles } from 'src/decorators/roles.decorator';
+import { User } from '../../entities/users.entity';
+import { Roles } from '../../decorators/roles.decorator';
 import { Role } from '../auth/roles.enum';
 import { RolesGuard } from '../auth/roles.guard';
 
