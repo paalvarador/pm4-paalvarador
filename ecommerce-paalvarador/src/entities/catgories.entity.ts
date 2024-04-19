@@ -1,4 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Product } from './products.entity';
 
@@ -15,4 +23,14 @@ export class Category {
   // Relacion (1 Categoria puede tener 1 o varios productos)
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
+
+  // Columnas para createdAt, updatedAt y deletedAt
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

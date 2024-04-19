@@ -1,11 +1,14 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
   ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Product } from './products.entity';
@@ -30,4 +33,14 @@ export class OrderDetail {
   @ManyToMany(() => Product)
   @JoinTable()
   products: Product[];
+
+  // Columnas para createdAt, updatedAt y deletedAt
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

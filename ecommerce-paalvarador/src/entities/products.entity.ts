@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Category } from './catgories.entity';
 
@@ -27,4 +35,14 @@ export class Product {
   // Relacion 1:N con table Categories
   @ManyToOne(() => Category, (category) => category.id)
   category: Category;
+
+  // Columnas para createdAt, updatedAt y deletedAt
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
