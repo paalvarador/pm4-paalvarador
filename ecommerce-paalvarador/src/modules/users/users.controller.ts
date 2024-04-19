@@ -28,6 +28,7 @@ export class UsersController {
   }
 
   @Get()
+  @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   async getUsers(@Query('page') page?: 1, @Query('limit') limit?: 5) {
     console.log(`page: ${page}`);
@@ -36,6 +37,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Roles(Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   async getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return await this.usersService.getUserById(id);
