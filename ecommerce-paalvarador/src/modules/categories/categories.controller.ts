@@ -10,7 +10,9 @@ import {
 import { CategoriesService } from './categories.service';
 import { Category } from '../../entities/catgories.entity';
 import { CreateCategoryDto } from '../../dto/create-category.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
@@ -18,6 +20,11 @@ export class CategoriesController {
   @Get()
   async getCategories() {
     return await this.categoriesService.getCategories();
+  }
+
+  @Get(':id')
+  async getCategory(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.categoriesService.getCategoriesById(id);
   }
 
   @Post()

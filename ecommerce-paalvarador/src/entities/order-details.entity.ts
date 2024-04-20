@@ -13,12 +13,14 @@ import {
 import { v4 as uuid } from 'uuid';
 import { Product } from './products.entity';
 import { Order } from './orders.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({
   name: 'order_details',
 })
 export class OrderDetail {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   id: uuid = uuid();
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: false })

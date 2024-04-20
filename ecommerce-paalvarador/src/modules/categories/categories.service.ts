@@ -10,6 +10,10 @@ export class CategoriesService {
     return await this.categoriesRepository.getCategories();
   }
 
+  async getCategoriesById(id: string) {
+    return await this.categoriesRepository.getCategoriesById(id);
+  }
+
   async getCategoriesByName(name: string) {
     return await this.categoriesRepository.getCategoriesByName(name);
   }

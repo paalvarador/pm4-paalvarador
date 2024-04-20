@@ -11,7 +11,13 @@ export class CategoriesRepository {
   ) {}
 
   async getCategories() {
-    return await this.categoriesRepository.find();
+    const categories = await this.categoriesRepository.find();
+    console.log(`categories: ${JSON.stringify(categories)}`);
+    return categories;
+  }
+
+  async getCategoriesById(id: string) {
+    return await this.categoriesRepository.findOne({ where: { id } });
   }
 
   async getCategoriesByName(name: string) {
